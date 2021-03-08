@@ -1,0 +1,48 @@
+#ifndef _LIMITEDLOGQUEUE_H 
+#define _LIMITEDLOGQUEUE_H 
+#include <Arduino.h> 
+#include "QueueArray.h" 
+
+ template<typename T> 
+class LimitedLogQueue{  
+public:  
+	LimitedLogQueue(String n, int s);      
+	~LimitedLogQueue();   
+	void add(const T i);    
+	void print();     
+	float getAverage();    
+private:   
+	String name;   
+	QueueArray<T> queue;   
+	int size; 
+}; 
+ template<typename T> LimitedLogQueue<T>::LimitedLogQueue(String n, int s) { 
+ 	name = n;
+	size = s;
+} 
+
+ template<typename T> LimitedLogQueue<T>::~LimitedLogQueue(){  
+	if(this!=NULL)
+		delete this;
+ } 
+
+ template<typename T> void LimitedLogQueue<T>::add(const T i){
+       if(queue.size==10){
+       queue.pop();}
+       queue.push(i);
+ } 
+
+ template<typename T> void LimitedLogQueue<T>::print(){  
+	Serial.println(name+" Values:");
+	for(int i = 0; i < 10; i++)
+		Serial.println((i+1)+":"+queue.peek());
+	Serial.println("Average: "+this.getAverage());
+} 
+
+ template<typename T> float LimitedLogQueue<T>::getAverage(){ 
+	float total = 0;
+	for(!queue.isEmpty())
+		total = total+queue.peek();
+	return total/size;	
+} 
+ #endif 
